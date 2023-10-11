@@ -18,7 +18,7 @@ class Func extends Component {
 
   validate = () => {
     if (!this.state.name) {
-      this.state.error.name = "please enter name";
+      this.setState({ error: { name: "Please Fill Your Name" } });
     }
 
     if (
@@ -26,7 +26,7 @@ class Func extends Component {
       this.state.dept.length < 3 ||
       this.state.dept.length > 10
     ) {
-      this.state.error.dept = "dept must be 3 char";
+      this.setState({ error: { dept: "deptartment must be 3 char" } });
     }
 
     if (
@@ -34,19 +34,28 @@ class Func extends Component {
       parseInt(this.state.rating) < 1 ||
       parseInt(this.state.rating) > 5
     ) {
-      this.state.error.rating = "rating should be between 1 to 5";
+      this.setState({ error: { rating: "rating should be between 1 to 5" } });
     }
   };
 
   handleSubmit = () => {
-    this.validate();
-    const tempObj = {
-      name: this.state.name,
-      dept: this.state.dept,
-      rating: this.state.rating,
-    };
+    if (
+      (!this.state.name && !this.state.dept) ||
+      this.state.dept.length < 3 ||
+      (this.state.dept.length > 10 && !this.state.rating) ||
+      parseInt(this.state.rating) < 1 ||
+      parseInt(this.state.rating) > 5
+    ) {
+      this.validate();
+    } else {
+      const tempObj = {
+        name: this.state.name,
+        dept: this.state.dept,
+        rating: this.state.rating,
+      };
+      this.state.studData.push(tempObj);
+    }
 
-    this.state.studData.push(tempObj);
     this.setState({
       studData: this.state.studData,
       name: "",
@@ -111,7 +120,6 @@ class Func extends Component {
             className="btn btn1"
             type="button"
             onClick={this.handleSubmit}
-            required
           >
             Submit
           </button>
@@ -129,7 +137,7 @@ class Func extends Component {
               );
             })}
           </div>
-        ) : undefined}
+        ) : null}
       </>
     );
   }
